@@ -41,7 +41,7 @@ void loop() {
   tts.makeCall(Number);
   tts.setTTSPlayPath(1); // Set TTS play path to remote (over the call)
   tts.setTTSParameters(2, 3, 0, 1, 0); // Example: max volume, normal tone, normal speed
-  // Play a TTS message during the call
+  delay(5000);
   tts.playTTSMessage("HI check out my other repos"); // insert your message here
 
   // Wait indefinitely (or add logic to repeat if needed)
