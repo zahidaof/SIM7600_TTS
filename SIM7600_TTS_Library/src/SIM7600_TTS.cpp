@@ -24,7 +24,7 @@ void SIM7600_TTS::begin() {
   waitForResponse(5000);
   Serial1.println("AT");
   waitForResponse(5000);
-  SerialAT.println("ATI");
+  Serial1.println("ATI");
   waitForResponse(5000);
   
 }
