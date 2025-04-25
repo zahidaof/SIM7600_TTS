@@ -33,7 +33,8 @@ void setup() {
 
   // Initialize the modem
   tts.begin();
-
+  tts.setTTSParameters(2, 3, 0, 1, 0); // Example: max volume, normal tone, normal speed
+  tts.setTTSPlayPath(1); // Set TTS play path to remote (over the call)
   // Make a test call to verify functionality
   if (tts.makeCall(Number)) {
     SerialMon.println("Call initiated successfully.");
@@ -51,3 +52,35 @@ void loop() {
     delay(1000);
   }
 }
+
+/*
+<volume> TTS Speech Volume, default：2.
+    0 – The mix volume
+    1 – The normal volume
+    2 – The max volume
+    <sysvolume> The module system volume, default：3. 
+    0 – The mix system volume
+    1 – The small system volume
+    2 – The normal system volume
+    3 – The max system volume
+    <digitmode> The digit read mode, default：0
+    0 – Auto read digit based on number rule first.
+    1 – Auto read digit bases on telegram rule first.
+    2 – Read digit based on telegram rule. 
+    3 – Read digit based on number rule. 
+    <pitch> The voice tone, default：1
+    0 – The mix voice tone. 
+    1 – The normal voice tone. 
+    2 – The max voice tone. 
+    <speed> The voice speed, default：1
+    0 – The mix speed
+    1 – The normal speed
+    2 – The max speed*/
+
+
+
+     /*=
+    <mode> Set TTS play path, local or remote. Default value is 0. 
+    0 – Local path
+    1 – Remote path
+    */

@@ -20,13 +20,13 @@
 
 // in my case Modem TX → ESP32 GPIO 16 (RX)
 //            Modem RX → ESP32 GPIO 17 (TX)
-#define MODEM_TX 16     
-#define MODEM_RX 17
-#define MODEM_PWRKEY 5
+#define MODEM_TX 27     
+#define MODEM_RX 25
+#define MODEM_PWRKEY 12
 #define MODEM_UART_BAUD 115200
 
 // Emergency contact number
-const char* Number = "";// insert your number here
+const char* Number = ""; // insert your number here
 
 void setup() {
   // Initialize serial monitors
@@ -44,14 +44,16 @@ void setup() {
   // Initialize the modem
   SerialAT.begin(MODEM_UART_BAUD, SERIAL_8N1, MODEM_RX, MODEM_TX);
   delay(3000);
-
+  SerialAT.println("AT+IPR=115200");
+    waitForResponse(5000);
   // Send basic AT command to check communication
   SerialAT.println("AT");
   if (waitForResponse(5000)) {
     SerialMon.println("Modem initialized successfully.");
   } else {
     SerialMon.println("Failed to communicate with modem. Check connections.");
-    while (true);
+
+    
   }
 
   // Display modem information
@@ -87,14 +89,11 @@ void makeTTSCall() {
     0 – Local path
     1 – Remote path
     */
-    if (waitForResponse(5000)) {
-      SerialMon.println("TTS play path set to remote.");
-    } else {
-      SerialMon.println("Failed to set TTS play path.");
-    }
-
+   
+    
+    delay(5000);
     // Play TTS message
-    playTTSMessage("HI check out my other repos");// insert your message here
+    playTTSMessage("the bluethooth device is ready to pair");// insert your message here
 
     
   } else {
@@ -106,7 +105,7 @@ void playTTSMessage(const char* message) {
   SerialMon.println("Playing TTS message: " + String(message));
 
   // Set TTS parameters (optional, adjust as needed)
-  SerialAT.println("AT+CTTSPARAM=2,3,0,1,1");  // Example: max volume, normal tone, normal speed
+  SerialAT.println("AT+CTTSPARAM=2,3,0,1,0");  // Example: max volume, normal tone, normal speed
     /* AT+CTTSPARAM=<volume>[,<sysvolume>[,<digitmode>[,<pitch>[,<speed>]]]
     <volume>,<sysvolume>,<digitmode>,<pitch>,<speed>
     Defined Values
@@ -137,6 +136,7 @@ void playTTSMessage(const char* message) {
     SerialMon.println("TTS parameters set successfully.");
   } else {
     SerialMon.println("Failed to set TTS parameters.");
+    return;
   }
 
   // Play the TTS message

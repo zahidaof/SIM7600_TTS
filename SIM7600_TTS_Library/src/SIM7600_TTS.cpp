@@ -19,9 +19,14 @@ void SIM7600_TTS::begin() {
   
   Serial1.begin(_baudRate, SERIAL_8N1, _rxPin, _txPin);
   delay(3000);
-  
+
+  Serial1.println("AT+IPR=115200");
+  waitForResponse(5000);
   Serial1.println("AT");
   waitForResponse(5000);
+  SerialAT.println("ATI");
+  waitForResponse(5000);
+  
 }
 
 bool SIM7600_TTS::makeCall(const char* number) {
@@ -49,4 +54,27 @@ bool SIM7600_TTS::waitForResponse(unsigned long timeout) {
     }
   }
   return false;
+}
+void SIM7600_TTS::setTTSParameters(int volume, int sysVolume, int digitMode, int pitch, int speed) {
+  
+  Serial1.print("AT+CTTSPARAM=");
+  Serial1.print(volume);
+  Serial1.print(",");
+  Serial1.print(sysVolume);
+  Serial1.print(",");
+  Serial1.print(digitMode);
+  Serial1.print(",");
+  Serial1.print(pitch);
+  Serial1.print(",");
+  Serial1.println(speed);
+
+  waitForResponse(5000);
+}
+void SIM7600_TTS::setTTSPlayPath(int mode) {
+  
+  Serial1.print("AT+CDTAM=");
+  Serial1.println(mode);
+
+  waitForResponse(5000);
+
 }
