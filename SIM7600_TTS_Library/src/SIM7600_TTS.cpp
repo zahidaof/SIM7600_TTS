@@ -20,27 +20,55 @@ void SIM7600_TTS::begin() {
   Serial1.begin(_baudRate, SERIAL_8N1, _rxPin, _txPin);
   delay(3000);
 
+  SerialMon.println("Setting fixed baud rate...");
   Serial1.println("AT+IPR=115200");
-  waitForResponse(5000);
+  if (waitForResponse(5000)) {
+    SerialMon.println("Baud rate set successfully.");
+  } else {
+    SerialMon.println("Failed to set baud rate.");
+  }
+
+  SerialMon.println("Testing modem communication...");
   Serial1.println("AT");
-  waitForResponse(5000);
+  if (waitForResponse(5000)) {
+    SerialMon.println("Modem communication successful.");
+  } else {
+    SerialMon.println("Failed to communicate with modem.");
+  }
+
+  SerialMon.println("Getting modem information...");
   Serial1.println("ATI");
-  waitForResponse(5000);
-  
+  if (waitForResponse(5000)) {
+    SerialMon.println("Modem information retrieved successfully.");
+  } else {
+    SerialMon.println("Failed to retrieve modem information.");
+  }
 }
 
 bool SIM7600_TTS::makeCall(const char* number) {
+  SerialMon.println("Dialing number: " + String(number));
   Serial1.print("ATD");
   Serial1.print(number);
   Serial1.println(";");
-  return waitForResponse(10000);
+  if (waitForResponse(10000)) {
+    SerialMon.println("Call initiated successfully.");
+    return true;
+  } else {
+    SerialMon.println("Failed to initiate call.");
+    return false;
+  }
 }
 
 void SIM7600_TTS::playTTSMessage(const char* message) {
+  SerialMon.println("Playing TTS message: " + String(message));
   Serial1.print("AT+CTTS=2,\"");
   Serial1.print(message);
   Serial1.println("\"");
-  waitForResponse(10000);
+  if (waitForResponse(10000)) {
+    SerialMon.println("TTS message played successfully.");
+  } else {
+    SerialMon.println("Failed to play TTS message.");
+  }
 }
 
 bool SIM7600_TTS::waitForResponse(unsigned long timeout) {
@@ -48,15 +76,18 @@ bool SIM7600_TTS::waitForResponse(unsigned long timeout) {
   while (millis() - start < timeout) {
     if (Serial1.available()) {
       String response = Serial1.readString();
+      SerialMon.println("Modem Response: " + response);  // Print the modem's response
       if (response.indexOf("OK") != -1 || response.indexOf("+CTTS: 0") != -1) {
         return true;
       }
     }
   }
+  SerialMon.println("No valid response received within timeout.");
   return false;
 }
+
 void SIM7600_TTS::setTTSParameters(int volume, int sysVolume, int digitMode, int pitch, int speed) {
-  
+  SerialMon.println("Setting TTS parameters...");
   Serial1.print("AT+CTTSPARAM=");
   Serial1.print(volume);
   Serial1.print(",");
@@ -68,13 +99,21 @@ void SIM7600_TTS::setTTSParameters(int volume, int sysVolume, int digitMode, int
   Serial1.print(",");
   Serial1.println(speed);
 
-  waitForResponse(5000);
+  if (waitForResponse(5000)) {
+    SerialMon.println("TTS parameters set successfully.");
+  } else {
+    SerialMon.println("Failed to set TTS parameters.");
+  }
 }
+
 void SIM7600_TTS::setTTSPlayPath(int mode) {
-  
+  SerialMon.println("Setting TTS play path...");
   Serial1.print("AT+CDTAM=");
   Serial1.println(mode);
 
-  waitForResponse(5000);
-
+  if (waitForResponse(5000)) {
+    SerialMon.println("TTS play path set successfully.");
+  } else {
+    SerialMon.println("Failed to set TTS play path.");
+  }
 }
