@@ -15,7 +15,7 @@ public:
     void begin();
     bool makeCall(const char* number);
     void playTTSMessage(const char* message);
-    void setTTSPlayPath(int mode); // Add this if needed
+    void setTTSPlayPath(int mode); 
     void setTTSParameters(int volume, int sysVolume, int digitMode, int pitch, int speed);
     
 private:
