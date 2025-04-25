@@ -45,18 +45,17 @@ void SIM7600_TTS::begin() {
   }
 }
 
-bool SIM7600_TTS::makeCall(const char* number) {
+void SIM7600_TTS::makeCall(const char* number) {
   _debugSerial->println("Dialing number: " + String(number));
   Serial1.print("ATD");
   Serial1.print(number);
   Serial1.println(";");
   if (waitForResponse(10000)) {
     _debugSerial->println("Call initiated successfully.");
-    return true;
   } else {
     _debugSerial->println("Failed to initiate call.");
-    return false;
   }
+  delay(5000);  
 }
 
 void SIM7600_TTS::playTTSMessage(const char* message) {

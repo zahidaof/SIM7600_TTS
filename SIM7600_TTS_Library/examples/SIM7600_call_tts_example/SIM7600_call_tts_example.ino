@@ -24,7 +24,7 @@
 const char* Number = ""; // insert your number here
 
 // Create an instance of SIM7600_TTS with the required arguments
-SIM7600_TTS tts(MODEM_TX, MODEM_RX, MODEM_PWRKEY, MODEM_UART_BAUD);
+SIM7600_TTS tts(MODEM_TX, MODEM_RX, MODEM_PWRKEY, MODEM_UART_BAUD, SerialMon);
 
 void setup() {
   SerialMon.begin(115200);
@@ -33,17 +33,14 @@ void setup() {
 
   // Initialize the modem
   tts.begin();
-  tts.setTTSParameters(2, 3, 0, 1, 0); // Example: max volume, normal tone, normal speed
-  tts.setTTSPlayPath(1); // Set TTS play path to remote (over the call)
-  // Make a test call to verify functionality
-  if (tts.makeCall(Number)) {
-    SerialMon.println("Call initiated successfully.");
-  } else {
-    SerialMon.println("Failed to initiate call.");
-  }
+  
+  
 }
 
 void loop() {
+  tts.makeCall(Number);
+  tts.setTTSPlayPath(1); // Set TTS play path to remote (over the call)
+  tts.setTTSParameters(2, 3, 0, 1, 0); // Example: max volume, normal tone, normal speed
   // Play a TTS message during the call
   tts.playTTSMessage("HI check out my other repos"); // insert your message here
 
