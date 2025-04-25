@@ -23,38 +23,28 @@
 // Emergency contact number
 const char* Number = ""; // insert your number here
 
-SIM7600_TTS tts;
+// Create an instance of SIM7600_TTS with the required arguments
+SIM7600_TTS tts(MODEM_TX, MODEM_RX, MODEM_PWRKEY, MODEM_UART_BAUD);
 
 void setup() {
   SerialMon.begin(115200);
   delay(10);
   SerialMon.println("Initializing...");
 
-  // Power on the modem
-  pinMode(MODEM_PWRKEY, OUTPUT);
-  digitalWrite(MODEM_PWRKEY, LOW);
-  delay(1000);
-  digitalWrite(MODEM_PWRKEY, HIGH);
-  delay(5000);
-
   // Initialize the modem
-  tts.begin(MODEM_UART_BAUD, MODEM_RX, MODEM_TX);
-  
-  // Check communication
-  if (tts.checkCommunication()) {
-    SerialMon.println("Modem initialized successfully.");
-  } else {
-    SerialMon.println("Failed to communicate with modem. Check connections.");
-    while (true);
-  }
+  tts.begin();
 
-  // Display modem information
-  tts.displayModemInfo();
+  // Make a test call to verify functionality
+  if (tts.makeCall(Number)) {
+    SerialMon.println("Call initiated successfully.");
+  } else {
+    SerialMon.println("Failed to initiate call.");
+  }
 }
 
 void loop() {
-  // Make a TTS call
-  tts.makeTTSCall(Number, "HI check out my other repos"); // insert your message here
+  // Play a TTS message during the call
+  tts.playTTSMessage("HI check out my other repos"); // insert your message here
 
   // Wait indefinitely (or add logic to repeat if needed)
   while (true) {

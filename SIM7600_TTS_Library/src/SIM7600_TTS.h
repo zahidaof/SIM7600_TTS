@@ -15,6 +15,7 @@ public:
     void begin();
     bool makeCall(const char* number);
     void playTTSMessage(const char* message);
+    void setTTSPlayPath(int mode); // Add this if needed
     void setTTSParameters(int volume, int sysVolume, int digitMode, int pitch, int speed);
     
 private:
@@ -22,7 +23,6 @@ private:
     int _rxPin;
     int _powerKeyPin;
     long _baudRate;
-    void powerOnModem();
     bool waitForResponse(unsigned long timeout);
 };
 
